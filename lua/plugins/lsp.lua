@@ -1,3 +1,16 @@
+local function lsp_check()
+    if vim.b.lsp_running == nil then
+        vim.b.lsp_running = vim.fn.empty(vim.lsp.get_clients({
+            bufnr = vim.api.nvim_get_current_buf(),
+            ft = vim.bo.filetype
+        })) ~= 1 -- True when not empty
+    end
+    if vim.b.lsp_running then
+        vim.lsp.buf.format { async = true }
+    else
+        vim.api.nvim_feedkeys("gg=G''", "n", false)
+    end
+end
 return {
     {
         "mason-org/mason-lspconfig.nvim",
@@ -30,12 +43,15 @@ return {
             { 'gD',        "<cmd>Lspsaga peek_definition<cr>" },
             { 'gt',        "<cmd>Lspsaga goto_type_definition<cr>" },
             { 'gT',        "<cmd>Lspsaga peek_type_definition<cr>" },
-            { ']',         "<cmd>Lspsaga diagnostic_jump_next<cr>" },
-            { '[',         "<cmd>Lspsaga diagnostic_jump_prev<cr>" },
+            { '<leader>]', "<cmd>Lspsaga diagnostic_jump_next<cr>" },
+            { '<leader>[', "<cmd>Lspsaga diagnostic_jump_prev<cr>" },
             { '<A-Enter>', "<cmd>Lspsaga code_action<cr>" },
             { 'gh',        "<cmd>Lspsaga hover_doc<cr>" },
             { 'gH',        "<cmd>Lspsaga hover_doc ++keep<cr>" },
-            { '<leader>=', function() vim.lsp.buf.format { async = true } end },
+            { '<leader>=', function()
+                vim.lsp.buf.format { async = true }
+            end
+            },
         },
         opts = {
             ui = { code_action = "" },
@@ -47,12 +63,12 @@ return {
                 enable_in_insert = false,
                 virtual_text = false
             },
+            code_action = {
+                keys = { quit = '<ESC>' }
+            }
         },
         config = function(_, opts)
             require('lspsaga').setup(opts)
-            -- fix conflex between keymap '[' and '[['
-            vim.keymap.del('n', '[')
-            vim.keymap.del('n', ']')
             -- rewrite lightbulb highlight group
             vim.api.nvim_set_hl(0, "SagaLightBulb", { fg = "#FDC30A" })
         end,
@@ -60,5 +76,24 @@ return {
             'nvim-treesitter/nvim-treesitter', -- optional
             'nvim-tree/nvim-web-devicons',     -- optional
         }
+    },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy", -- Or `LspAttach`
+        priority = 1000,    -- needs to be loaded in first
+        config = function()
+            require('tiny-inline-diagnostic').setup {
+                preset = "classic",
+                transparent_bg = true,
+                transparent_cursorline = true,
+                options = {
+                    break_line = {
+                        enabled = true,
+                        after = 40,
+                    },
+                }
+            }
+            vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
+        end
     }
 }

@@ -17,6 +17,11 @@ return {
             -- Works also in Visual mode if mapping differs from `comment_visual`
             -- textobject = 'gc',
         },
+        hooks = {
+            post = function()
+                vim.api.nvim_feedkeys('j', 'n', false)
+            end
+        }
 
     }
 }

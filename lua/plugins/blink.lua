@@ -61,13 +61,28 @@ return {
             nerd_font_variant = 'mono'
         },
 
-        -- (Default) Only show the documentation popup when manually triggered
         completion = {
-            documentation = { auto_show = true, auto_show_delay_ms = 500 },
+            list = {
+                selection = { auto_insert = true },
+            },
+            documentation = {
+                auto_show = true,
+                auto_show_delay_ms = 200,
+                window = {
+                    border = "rounded",
+                    winhighlight =
+                    "Normal:Normal,FloatBorder:NotifyINFOBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
+                },
+            },
             ghost_text = { show_with_menu = true },
             menu = {
                 auto_show = true,
+                border = "rounded",
+                scrollbar = false,
+                winhighlight =
+                "Normal:Normal,FloatBorder:NotifyINFOBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
                 draw = {
+                    gap = 2,
                     components = {
                         kind_icon = {
                             text = function(ctx)
