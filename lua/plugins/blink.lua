@@ -53,6 +53,16 @@ return {
             ['<A-j>'] = { 'scroll_documentation_down', 'fallback' },
 
             -- ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+            --
+            -- For rime_ls
+            ['<space>'] = {
+                function(cmp)
+                    if not vim.g.rime_enabled then return false end
+                    local rime_item_index = get_n_rime_item_index(1)
+                    if #rime_item_index ~= 1 then return false end
+                    return cmp.accept({ index = rime_item_index[1] })
+                end,
+                'fallback' },
         },
 
         appearance = {
@@ -132,7 +142,7 @@ return {
                     module = "lazydev.integrations.blink",
                     -- make lazydev completions top priority (see `:h blink.cmp`)
                     score_offset = 100,
-                },
+                }
             },
         },
 

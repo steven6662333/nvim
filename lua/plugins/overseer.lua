@@ -11,7 +11,7 @@ local function get_task_by_id(id)
     return nil
 end
 local function select_and_save(bufnr)
-    print("Last task not found.Select and run one.")
+    -- print("Last task not found. Select and run one.")
     if bufnr == nil then
         bufnr = vim.api.nvim_get_current_buf()
     end
@@ -46,7 +46,11 @@ return {
         { "<F6>", select_and_save }
     },
     opts = {
-        strategy = "toggleterm",
+        strategy = {
+            "toggleterm",
+            hidden = false,
+            auto_scroll = true,
+        },
     },
     config = function(_, _opts)
         local overseer = require("overseer")
@@ -69,6 +73,7 @@ return {
                             return {
                                 cmd = { files.join(opts.dir, filename) },
                                 args = params.args,
+                                cwd = opts.dir
                             }
                         end,
                     })

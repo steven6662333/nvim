@@ -11,10 +11,15 @@ local function lsp_check()
         vim.api.nvim_feedkeys("gg=G''", "n", false)
     end
 end
+
 return {
     {
         "mason-org/mason-lspconfig.nvim",
         opts = {},
+        config = function(_, opts)
+            require("mason-lspconfig").setup(opts)
+            require("config.rime_ls").setup_rime()
+        end,
         dependencies = {
             { "mason-org/mason.nvim", opts = {} },
             "neovim/nvim-lspconfig",
@@ -43,6 +48,7 @@ return {
             { 'gD',        "<cmd>Lspsaga peek_definition<cr>" },
             { 'gt',        "<cmd>Lspsaga goto_type_definition<cr>" },
             { 'gT',        "<cmd>Lspsaga peek_type_definition<cr>" },
+            { '<leader>f', "<cmd>Lspsaga finder<cr>" },
             { '<leader>]', "<cmd>Lspsaga diagnostic_jump_next<cr>" },
             { '<leader>[', "<cmd>Lspsaga diagnostic_jump_prev<cr>" },
             { '<A-Enter>', "<cmd>Lspsaga code_action<cr>" },

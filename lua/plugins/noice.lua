@@ -1,18 +1,27 @@
+local high = {
+    relative = "editor",
+    position = {
+        col = "50%",
+        row = "30%"
+    }
+}
 return {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
         cmdline = {
             format = {
-                cmdline = {
-                    opts = {
-                        relative = "editor",
-                        position = {
-                            col = "50%",
-                            row = "30%"
-                        }
-                    }
-                }
+                cmdline = { opts = high },
+                lua = { opts = high },
+                help = { opts = high },
+                filter = { opts = high },
+                input = { opts = high }
+            }
+        },
+        routers = {
+            {
+                view = "cmdline",
+                filter = { event = "msg_show", find = "Hop" },
             }
         },
         -- you can enable a preset for easier configuration

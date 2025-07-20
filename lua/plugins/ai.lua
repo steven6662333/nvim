@@ -1,13 +1,42 @@
+local function find_ft(ft)
+    for _, w in ipairs(vim.api.nvim_list_wins()) do
+        local b = vim.api.nvim_win_get_buf(w)
+        if vim.bo[b].filetype == ft then
+            return true
+        end
+    end
+    return false
+end
+local function toggle()
+    local cc = require("codecompanion")
+    local chat = cc.last_chat()
 
+    if not chat then
+        return cc.chat()
+    end
+
+    if chat.ui:is_visible() then
+        if vim.bo.filetype == "codecompanion" then
+            local keys = vim.api.nvim_replace_termcodes("<C-w>h", true, false, true)
+            vim.api.nvim_feedkeys(keys, 'n', false)
+        else
+            local keys = vim.api.nvim_replace_termcodes("<C-w>l", true, false, true)
+            vim.api.nvim_feedkeys(keys, 'n', false)
+        end
+    end
+
+    chat.context = require("codecompanion.utils.context").get(vim.api.nvim_get_current_buf())
+    cc.close_last_chat()
+    chat.ui:open({ toggled = true })
+end
 return {
     {
         "olimorris/codecompanion.nvim",
-        lazy = false,
         keys = {
             { "<leader>cc", "<cmd>CodeCompanion<cr>" },
             {
                 "<C-l>",
-                "<cmd>CodeCompanionChat Toggle<cr>",
+                toggle,
                 mode = { "n", "v" }
             },
             {
@@ -174,6 +203,7 @@ return {
     },
     {
         'milanglacier/minuet-ai.nvim',
+        enabled = false,
         opts = {
             virtualtext = {
                 auto_trigger_ft = { "*" },

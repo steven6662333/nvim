@@ -1,5 +1,6 @@
 return {
     'nvim-telescope/telescope.nvim',
+    lazy = false,
     tag = '0.1.8',
     keys = {
         { '<leader>h', "<cmd>Telescope oldfiles<cr>", { desc = "Telescope old files" } }

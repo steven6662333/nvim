@@ -6,5 +6,8 @@ return {
     {
         'windwp/nvim-ts-autotag',
         opts = {}
-    }
+    },
+    -- { 'hiphish/rainbow-delimiters.nvim',
+    --     opts = {}
+    -- }
 }
